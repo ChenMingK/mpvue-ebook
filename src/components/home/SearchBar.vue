@@ -9,12 +9,29 @@
       ></van-icon>
       <input 
         class="search-bar-input"
+        :focus="focus"
+        :disabled="disabled"
+        :maxlength="limit"
+        :placeholder="hotSearch.length === 0 ? '搜索' : hotSearch"
+        v-model="searchWord"
+        @input="onChange"
+        confirm-type="search"
+        @confirm="onConfirm"
+        @click="onSearchBarClick"
+        placeholder-style="color: #ADB4BE"
       /> <!-- 我们编写的 input 会被转换为小程序的组件，且会建立属性映射 -->
+      <!-- 
+        confirm-type = search 表示手机弹出的键盘右下角按钮为 "搜索"
+        confirm -> bindconfirm 注意 mpvue 有时候与小程序文档的不一致
+        placeholder-style = "String" 指定 placeholder 的样式
+       -->
       <van-icon 
         class="clear"
         name="clear"
         size="16px"
         color="#858C96"
+        @click="onClearClick"
+        v-if="searchWord.length > 0"
       ></van-icon> <!-- vant-icon 组件库 -->
     </div>
   </div>
@@ -26,6 +43,61 @@
   export default {
     components: {
       SearchBar
+    },
+    // 通过 props 定制该组件的搜索框功能
+    props: {
+      // 搜索框是否获得焦点，focus 属性是小程序 input 组件独有的而不是 web 原生
+      focus: {
+        type: Boolean,
+        default: false // 指定为 false 会发现，输入文字会马上失去焦点，需要 fix
+      },
+      // 是否禁用搜索框
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      // 输入的最大长度，对应小程序 input 组件的 maxlenght
+      limit: {
+        type: Number,
+        default: 50
+      },
+      // 热门搜索词
+      hotSearch: {
+        type: String,
+        default: ''
+      }
+    },
+    data () {
+      return {
+        searchWord: ''
+      }
+    },
+    methods: {
+      // 搜索框点击事件
+      onSearchBarClick () {
+        this.$emit('onClick')
+      },
+      // 点击清空按钮触发
+      onClearClick () {
+        this.searchWord = ''
+        this.$emit('onClear')
+      },
+      // 输入监听事件
+      onChange (e) {
+        const { value } = e.mp.detail
+        this.$emit('onChange', value) // 自身不处理，交由父组件处理
+      },
+      // 点击虚拟键盘搜索事件
+      onConfirm (e) {
+        const { value } = e.mp.detail
+        this.$emit('onConfirm', value)
+      },
+      setValue (v) {
+        this.searchWord = v
+      },
+      getValue (v) {
+        return this.searchWord
+      }
     }
   }
 </script>

@@ -4,7 +4,7 @@
 -->
 
 <template>
-  <div class="image-view" @click="onClick">
+  <div class="image-view" @click="onClick" :style="{ height }">
     <img 
       :class="round ? 'round image' : 'image' "
       :style="{ height }"
@@ -61,8 +61,14 @@
     },
     watch: {
       // 监听 src 变化，如果 src 变化，则将 isLoading 置为 true
+      // 对应换一批功能，加载新的图片如果网速较慢则显示占位符
       src (newValue, preValue) {
-
+        if (newValue && newValue.length > 0 && newValue !== preValue) {
+          this.$nextTick(() => {
+            this.isLoading = true
+            this.error = false
+          })
+        }
       }
     },
     data () {

@@ -18,7 +18,7 @@
         confirm-type="search"
         @confirm="onConfirm"
         @click="onSearchBarClick"
-        placeholder-style="color: #ADB4BE"
+        placeholder-style="color: #ADB4BE; font-size: 15px;"
       /> <!-- 我们编写的 input 会被转换为小程序的组件，且会建立属性映射 -->
       <!-- 
         confirm-type = search 表示手机弹出的键盘右下角按钮为 "搜索"

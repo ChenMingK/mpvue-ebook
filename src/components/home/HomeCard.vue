@@ -3,32 +3,26 @@
     <div class="home-card-inner">
       <div class="user-info">
         <div class="avatar-wrapper">
-          <ImageView 
-            src="https://www.youbaobao.xyz/mpvue-res/logo.jpg"
-            round
+          <ImageView
+            :src="avatar"
+            round 
+            height="100%"
+            mode="scaleToFill"
           />
         </div>
-        <div class="nickname">{{'米老鼠'}}</div>
-        <div class="shelf-text">书架共有{{3}}本好书</div>
+        <div class="nickname">{{nickname}}</div>
+        <div class="shelf-text">书架共有{{data.num}}本好书</div>
         <div class="round-item"></div> <!-- 文字的点 -->
         <div class="shelf-text">特别精选</div>
       </div>
       <div class="book-info">
         <div class="book-wrapper">
-          <div class="book-img-wrapper">
-            <ImageView 
-              src="https://www.youbaobao.xyz/book/res/img//EarthSciences/978-981-10-3713-9_CoverFigure.jpg"
-            />
-          </div>
-          <div class="book-img-wrapper">
-            <ImageView 
-              src="https://www.youbaobao.xyz/book/res/img//EarthSciences/978-981-10-3713-9_CoverFigure.jpg"
-            />
-          </div>
-          <div class="book-img-wrapper">
-            <ImageView 
-              src="https://www.youbaobao.xyz/book/res/img//EarthSciences/978-981-10-3713-9_CoverFigure.jpg"
-            />
+          <div class="book-img-wrapper" 
+              v-for="(item, index) in bookList" 
+              :key="index"
+              @click="onBookClick"
+          >
+            <ImageView :src="item.cover" />
           </div>
         </div>
         <div class="shelf-wrapper">
@@ -67,12 +61,24 @@
         default: 0
       }
     },
+    computed: {
+      // fix: 由于数据是异步获取的，可能导致渲染时数据值为空的情况，使用计算属性确保渲染时属性值合法
+      avatar () {
+        return (this.data && this.data.userInfo && this.data.userInfo.avatarUrl) || '' // 一般设置一个兼容的值，不要使其为 undefined
+      },
+      nickname () {
+        return (this.data && this.data.userInfo && this.data.userInfo.nickName) || '' // 注意大小写
+      },
+      bookList () {
+        return (this.data && this.data.bookList) || []
+      }
+    },
     methods: {
       gotoShelf () {
 
       },
       onBookClick () {
-
+        this.$emit('onHomeCardBookClick')
       },
       sign () {
 

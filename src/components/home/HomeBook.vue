@@ -132,7 +132,7 @@
       onBookClick () { this.$emit('onBookClick') }
     },
     mounted () {
-      console.log(this.bookData)
+      // console.log(this.bookData)
     }
   }
 </script>
@@ -141,6 +141,7 @@
   .home-book {
     .home-book-header {
       padding: 13px 0 0 20.5px;
+      font-weight: bold;
     }
     .home-book-content {
       padding: 0 12px;
@@ -210,6 +211,7 @@
               width: 150px;
               text-overflow: ellipsis;
               overflow: hidden;
+              font-weight: 500;
             }
             .category-num {
               color: #868686;
